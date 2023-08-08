@@ -73,7 +73,7 @@ export function UserLogin(){
                         <button style={{width:'100%'}} className="btn btn-danger">Login</button>
                         <div className="text-danger" style={{fontWeight:"bold"}}><p>{error}</p></div>
                     </form>
-                <div><Link to="/register-user" style={{color: 'black', textDecoration: 'none'}}>Crete your account<span className="bi bi-arrow-right"></span></Link></div>
+                <div><Link to="/register-user" style={{color: 'black', textDecoration: 'none'}}>Create your account<span className="bi bi-arrow-right"></span></Link></div>
             </div>
         </div>
     )

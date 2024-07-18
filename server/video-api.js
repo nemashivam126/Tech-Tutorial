@@ -1,7 +1,7 @@
 var express = require("express");
 var cors = require("cors");
 var mongoClient = require("mongodb").MongoClient;
-var constr = "mongodb://127.0.0.1:27017";
+const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017";
 const port = process.env.PORT || 5000;
 
 var app = express();
@@ -11,7 +11,7 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 app.get("/admin", (req, res)=>{
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("admin").find({}).toArray().then(documents=>{
             res.send(documents);
@@ -20,7 +20,7 @@ app.get("/admin", (req, res)=>{
     })
 })
 app.get("/categories", (req, res)=>{
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("categories").find({}).toArray().then(documents=>{
             res.send(documents);
@@ -29,7 +29,7 @@ app.get("/categories", (req, res)=>{
     })
 })
 app.get("/users", (req, res)=>{
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("users").find({}).toArray().then((documents)=>{
             res.send(documents);
@@ -38,7 +38,7 @@ app.get("/users", (req, res)=>{
     })
 })
 app.get("/videos", (req, res)=>{
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("videos").find({}).toArray().then(documents=>{
             res.send(documents);
@@ -48,7 +48,7 @@ app.get("/videos", (req, res)=>{
 })
 app.get("/videos/:id", (req, res)=>{
     var id = parseInt(req.params.id);
-    mongoClient.connect(constr).then(clientObj=>{
+    mongoClient.connect(mongoURI).then(clientObj=>{
         var database = clientObj.db("reactDB");
         database.collection("videos").find({VideoId:id}).toArray().then(documents=>{
             res.send(documents);
@@ -58,7 +58,7 @@ app.get("/videos/:id", (req, res)=>{
 })
 app.get("/getvideos/:catid", (req, res)=>{
     var id = parseInt(req.params.catid);
-    mongoClient.connect(constr).then(clientObj=>{
+    mongoClient.connect(mongoURI).then(clientObj=>{
         var database = clientObj.db("reactDB");
         database.collection("videos").find({CategoryId:id}).toArray().then(documents=>{
             res.send(documents);
@@ -68,7 +68,7 @@ app.get("/getvideos/:catid", (req, res)=>{
 })
 app.get("/categories/:id", (req, res)=>{
     var id = parseInt(req.params.id);
-    mongoClient.connect(constr).then(clientObj=>{
+    mongoClient.connect(mongoURI).then(clientObj=>{
         var database = clientObj.db("reactDB");
         database.collection("categories").find({CategoryId:id}).toArray().then(documents=>{
             res.send(documents);
@@ -81,7 +81,7 @@ app.post("/addcategory", (req, res)=>{
         CategoryId: parseInt(req.body.CategoryId),
         CategoryName: req.body.CategoryName
     };
-    mongoClient.connect(constr).then(clientObj=>{
+    mongoClient.connect(mongoURI).then(clientObj=>{
         var database = clientObj.db("reactDB");
         database.collection("categories").insertOne(category).then(()=>{
             console.log(`Category Inserted`);
@@ -98,7 +98,7 @@ app.post("/adduser", (req, res)=>{
         Email: req.body.Email,
         Mobile: req.body.Mobile
     };
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("users").insertOne(user).then(()=>{
             console.log('user record inserted');
@@ -117,7 +117,7 @@ app.post("/addvideo", (req, res)=>{
         Views: parseInt(req.body.Views),
         CategoryId: parseInt(req.body.CategoryId)
     };
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("videos").insertOne(video).then(()=>{
             console.log('video record inserted');
@@ -137,7 +137,7 @@ app.put("/updatevideo/:id", (req, res)=>{
         Views: parseInt(req.body.Views),
         CategoryId: parseInt(req.body.CategoryId)
     }
-    mongoClient.connect(constr).then(clientObj=>{
+    mongoClient.connect(mongoURI).then(clientObj=>{
         var database = clientObj.db("reactDB");
         database.collection("videos").updateOne({VideoId:id},{$set: video}).then(()=>{
             console.log(`Video record updaated`);
@@ -148,7 +148,7 @@ app.put("/updatevideo/:id", (req, res)=>{
 })
 app.delete("/deletevideo/:id", (req, res)=>{
     var id = parseInt(req.params.id);
-    mongoClient.connect(constr).then((clientObj)=>{
+    mongoClient.connect(mongoURI).then((clientObj)=>{
         var database = clientObj.db("reactDB");
         database.collection("videos").deleteOne({VideoId:id}).then(()=>{
             console.log('video record deleted');
